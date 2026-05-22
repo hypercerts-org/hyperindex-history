@@ -1,0 +1,4 @@
+kind: added
+body: Add a Hyperindex append-only indexer Agent Skill with audit GraphQL query examples, pagination guidance, and a default public endpoint for consumers.
+custom:
+  Affects: user
