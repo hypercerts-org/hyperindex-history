@@ -4,17 +4,17 @@
 
 # Hyperindex (hi)
 
-**A Go AT Protocol AppView server that indexes records and exposes them via GraphQL**
+**Hyperindex History: a Go AT Protocol AppView server that indexes records, records all configured audit events, and exposes current state plus append-only history via GraphQL**
 
 See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for local setup, verification, and pull request guidance.
 
-Hyperindex (hi) connects to the AT Protocol network, indexes records matching your configured Lexicons, and provides a GraphQL API for querying them. It's a Go port of [Quickslice](https://github.com/quickslice/quickslice).
+Hyperindex (hi) connects to the AT Protocol network, indexes records matching your configured Lexicons, and provides a GraphQL API for querying them. In Tap audit mode, this indexer records every valid audit event from the configured Tap stream before updating current-state projections, creating Hyperindex History for the records you track. It's a Go port of [Quickslice](https://github.com/quickslice/quickslice).
 
 > **Rename note:** this project was renamed from Hypergoat to Hyperindex.
 
-## Recommended: append-only indexing with Tap
+## Recommended: Hyperindex History with Tap
 
-For production and serious local testing, run Hyperindex as a **Tap-backed append-only indexer**. Tap verifies and orders AT Protocol repo events; Hyperindex stores every valid Tap delivery in append-only audit tables before updating the fast current-state `record` and `actor` projections used by normal GraphQL queries.
+For production and serious local testing, run Hyperindex as a **Tap-backed append-only history indexer**. Tap verifies and orders AT Protocol repo events; Hyperindex records every valid audit event from the configured Tap stream in append-only audit tables before updating the fast current-state `record` and `actor` projections used by normal GraphQL queries.
 
 Minimal Hyperindex env:
 
@@ -35,8 +35,8 @@ TAP_COLLECTION_FILTERS=app.certified.*,org.hypercerts.*
 What this gives you:
 
 - current-state GraphQL queries keep working through `records`, typed collection queries, search, and `collectionStats`
-- append-only record history is available through the built-in `auditRecordEvents` GraphQL query
-- raw Tap deliveries and identity events are preserved in database audit tables for operators
+- Hyperindex History is available through the built-in `auditRecordEvents` GraphQL query
+- raw Tap deliveries, record audit events, and identity events are preserved in database audit tables for operators
 - the post-deploy smoke suite can verify audit history with `HYPERINDEX_SMOKE_AUDIT=1`
 
 ```graphql
